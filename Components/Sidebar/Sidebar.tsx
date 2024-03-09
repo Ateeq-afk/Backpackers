@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { FaHeart, FaTag, FaUsers, FaCalendarAlt, FaCog, FaCamera, FaMapMarkerAlt, FaStar } from 'react-icons/fa';
 import { TbTrekking } from "react-icons/tb";
 import { HiHomeModern } from "react-icons/hi2";
+import { MdOutlineAttractions } from "react-icons/md";
+import { ImBlog } from "react-icons/im";
 const Sidebar = () => {
   return (
     <div className="flex flex-col w-64 px-4 py-8 bg-black text-white  sticky top-0 h-screen">
@@ -26,6 +28,18 @@ const Sidebar = () => {
           <div className="flex items-center space-x-3 text-blue-400 ">
             <HiHomeModern className="w-6 h-6" />
             <span>Create Stays/Camping</span>
+          </div>
+        </Link>
+        <Link href="/createblogs">
+          <div className="flex items-center space-x-3 text-yellow-400 ">
+            <ImBlog  className="w-6 h-6" />
+            <div>Create Blogs</div>
+          </div>
+        </Link>
+        <Link href="/createattraction">
+          <div className="flex items-center space-x-3 text-red-400 ">
+            <MdOutlineAttractions  className="w-6 h-6" />
+            <div>Create Attraction</div>
           </div>
         </Link>
         {/* Add other navigation links similarly */}
