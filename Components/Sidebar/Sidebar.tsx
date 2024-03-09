@@ -5,13 +5,16 @@ import { TbTrekking } from "react-icons/tb";
 import { HiHomeModern } from "react-icons/hi2";
 import { MdOutlineAttractions } from "react-icons/md";
 import { ImBlog } from "react-icons/im";
+import Image from 'next/image';
 const Sidebar = () => {
   return (
-    <div className="flex flex-col w-64 px-4 py-8 bg-black text-white  sticky top-0 h-screen">
+    <div className="flex flex-col w-[300px] px-4 py-8 bg-black text-white  sticky top-0 h-screen">
       <div className="flex flex-col items-center ">
         <Link href="/">
           <div className="flex items-center space-x-2">
-            <img src="/logo.png" alt="Logo" className="w-8 h-8" />
+            <div className='w-[50px] h-[50px] relative'>
+            <Image src="/logo.png" alt="Logo" objectFit='cover' layout='fill' />
+            </div>
             <span className="text-xl font-bold">Backpackers United</span>
           </div>
         </Link>
