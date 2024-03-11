@@ -664,6 +664,7 @@ useEffect(() => {
   value={destOptions.find((option: any) => option.value === actData.destination)}
   onChange={(selectedOption) => setActData(prevState => ({ ...prevState, destination: selectedOption ? (selectedOption as any).value : ''}))}
   options={destOptions}
+  className='text-gray-700'
 />
 
       </div>
@@ -730,14 +731,14 @@ useEffect(() => {
       {actData.days.map((day, index) => (
   <div key={index} className="border border-gray-300 shadow-md p-4 rounded my-4 w-full">
     <div className="flex flex-col gap-4">
-      <label className="font-bold text-lg mb-2">Day {index + 1}</label>
+      <label className="font-bold text-lg mb-2 text-gray-700">Day {index + 1}</label>
       <input
         type="text"
         placeholder="Day Title: 'Day 0', 'Day 1', 'Day 2', and so on"
         name="day"
         value={day.day}
         onChange={(e) => handleDayChange(index, e)}
-        className="w-full p-3 border border-gray-300 rounded"
+        className="w-full p-3 border border-gray-300 rounded text-gray-700"
       />
       <input
         type="text"
@@ -745,7 +746,7 @@ useEffect(() => {
         name="cityName"
         value={day.cityName}
         onChange={(e) => handleDayChange(index, e)}
-        className="w-full p-3 border border-gray-300 rounded"
+        className="w-full p-3 border border-gray-300 rounded text-gray-700"
       />
       <input
         type="text"
@@ -753,7 +754,7 @@ useEffect(() => {
         name="meals"
         value={day.meals}
         onChange={(e) => handleDayChange(index, e)}
-        className="w-full p-3 border border-gray-300 rounded"
+        className="w-full p-3 border border-gray-300 rounded text-gray-700"
       />
       {/* Descriptions */}
       <div className="flex flex-col gap-2">
@@ -765,7 +766,7 @@ useEffect(() => {
             name={`description[${descIndex}]`}
             value={desc}
             onChange={(e) => handleDescriptionChange(index, descIndex, e)}
-            className="w-full p-3 border border-gray-300 rounded"
+            className="w-full p-3 border border-gray-300 rounded text-gray-700"
           />
         ))}
          <div className="flex justify-center mt-2">
@@ -780,20 +781,20 @@ useEffect(() => {
       </div>
       {/* Cover Image */}
       <div className="flex items-center gap-2">
-        <label className="font-bold text-lg mb-2 flex-shrink-0"> Image:</label>
+        <label className="font-bold text-lg mb-2 flex-shrink-0 text-gray-700"> Image:</label>
         <input
           type="file"
           onChange={(e) => handleDayFileChange(index, e)}
           className="w-full p-3 border border-gray-300 rounded"
         />
-              <label className="font-bold text-lg mb-2 flex-shrink-0 "> Image Alt:</label>
+              <label className="font-bold text-lg mb-2 flex-shrink-0 text-gray-700"> Image Alt:</label>
       <input
         type="text"
         placeholder="Image Alt Text"
         name="imagealt"
         value={day.imagealt}
         onChange={(e) => handleDayChange(index, e)}
-        className="w-full p-3 border border-gray-300 rounded"
+        className="w-full p-3 border border-gray-300 rounded text-gray-700"
       />
       </div>
       {/* Image Alt Text */}
@@ -815,17 +816,17 @@ useEffect(() => {
       {actData.booking.map((booking, index) => (
   <div key={index} className="border border-gray-300 shadow-md p-4 rounded my-4 w-full">
     <div className="flex flex-col gap-4 ">
-      <label className="font-bold text-lg mb-2">Booking Options {index + 1}</label>
+      <label className="font-bold text-lg mb-2 text-gray-700">Booking Options {index + 1}</label>
       <div className='flex flex-row gap-2 '>
         <div className='flex flex-row gap-2 w-1/2 items-center'>
-      <label className="font-bold text-sm  ">Booking Name</label>
+      <label className="font-bold text-sm text-gray-700 ">Booking Name</label>
       <input
         type="text"
         placeholder="Enter name of the activity"
         name="bookingname"
         value={booking.bookingname}
         onChange={(e) => handlebookingChange(index, e)}
-        className=" p-3 border-b border-gray-300 rounded w-full"
+        className=" p-3 border-b border-gray-300 rounded w-full text-gray-700"
       />
       </div>
       <div className='flex flex-row w-1/2 items-center gap-2'>
@@ -836,31 +837,31 @@ useEffect(() => {
         name="duration"
         value={booking.duration}
         onChange={(e) => handlebookingChange(index, e)}
-        className="w-full p-3 border-b border-gray-300 rounded"
+        className="w-full p-3 border-b border-gray-300 rounded text-gray-700"
       />
       </div>
         </div>
         <div className="flex flex-row gap-2">
             <div className='w-1/2 flex flex-row gap-4 items-center'>
-        <label className="font-bold text-sm mb-2 flex-shrink-0">From Amount</label>
+        <label className="font-bold text-sm mb-2 flex-shrink-0 text-gray-700">From Amount</label>
       <input
         type="number"
         placeholder="Enter the slash amount"
         name="fromamount"
         value={booking.fromamount}
         onChange={(e) => handlebookingChange(index, e)}
-        className="w-full p-3 border border-gray-300 rounded"
+        className="w-full p-3 border border-gray-300 rounded text-gray-700"
       />
    </div>
    <div className='w-1/2 flex flex-row gap-2 items-center'>
-        <label className="font-bold text-sm mb-2 flex-shrink-0"> Amount</label>
+        <label className="font-bold text-sm mb-2 flex-shrink-0 text-gray-700"> Amount</label>
         <input
           type="number"
           placeholder="Enter main amount of Booking options"
           name="amount"
           value={booking.amount}
           onChange={(e) => handlebookingChange(index, e)}
-          className="w-full p-3 border border-gray-300 rounded"
+          className="w-full p-3 border border-gray-300 rounded text-gray-700"
         />
         </div>
            </div>
@@ -987,7 +988,7 @@ useEffect(() => {
             value={selectedBlog}
             onChange={(activityOptions) => handleSimilarChange(activityOptions, index)}
             options={activityOptions}
-            className="flex-grow"
+            className="flex-grow text-gray-700"
             placeholder={`Select Similar Activity #${index + 1}`}
             isClearable
           />
@@ -1018,7 +1019,7 @@ useEffect(() => {
         value={selectedActivity}
         onChange={(activityOptions) => handleRelatedChange(activityOptions, index)}
         options={activityOptions}
-        className="flex-grow"
+        className="flex-grow text-gray-700"
         placeholder={`Select Related Activity #${index + 1}`}
         isClearable
       />
@@ -1050,7 +1051,7 @@ useEffect(() => {
             value={selectedBlog}
             onChange={(option) => handleSelectChange(option, index)}
             options={options}
-            className="flex-grow"
+            className="flex-grow text-gray-700"
             placeholder={`Select Blog #${index + 1}`}
             isClearable
           />

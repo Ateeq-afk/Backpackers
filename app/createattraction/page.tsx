@@ -221,7 +221,7 @@ const page = () => {
   }, []);
 useEffect(() => {
   const fetchtrek = async () => {
-    const response = await fetch('http://localhost:4000/attraction');
+    const response = await fetch('https://launch-api1.vercel.app/attraction');
     const data = await response.json();
     const formattedOptions = data.data.map((trek:trek) => ({
       value: trek._id,
@@ -514,7 +514,7 @@ useEffect(() => {
         });
       }
         try {
-          const response = await fetch('http://localhost:4000/attraction/createattraction', {
+          const response = await fetch('https://launch-api1.vercel.app/attraction/createattraction', {
             method: 'POST',
             body: formData,
           });

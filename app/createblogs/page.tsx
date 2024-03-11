@@ -130,7 +130,7 @@ const page = () => {
   useEffect(() => {
     // Fetch the names and IDs
     const fetchNames = async () => {
-      const response = await fetch('http://localhost:4000/blog');
+      const response = await fetch('https://launch-api1.vercel.app/blog');
       const data = await response.json();
       const formattedOptions = data.data.map((blog: Blog) => ({
         value: blog._id, // Assuming 'id' is your identifier
@@ -144,7 +144,7 @@ const page = () => {
   useEffect(() => {
     // Fetch the names and IDs
     const fetchNames = async () => {
-      const response = await fetch('http://localhost:4000/blog');
+      const response = await fetch('https://launch-api1.vercel.app/blog');
       const data = await response.json();
       console.log("data",data)
       const formattedOptions = data.data.map((blog: Blog) => ({
@@ -513,7 +513,7 @@ useEffect(() => {
         });
       }
         try {
-          const response = await fetch('http://localhost:4000/blog/createblogs', {
+          const response = await fetch('https://launch-api1.vercel.app/blog/createblogs', {
             method: 'POST',
             body: formData,
           });

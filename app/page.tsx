@@ -6,7 +6,7 @@ export default function Home() {
     <div className="bg-white flex h-screen">
       <Sidebar />
 <div className="text-5xl font-bold text-center flex-1">
-  Comming  Soon
+  Coming  Soon
 </div>
     </div>
   );
