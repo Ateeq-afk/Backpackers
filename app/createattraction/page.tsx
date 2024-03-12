@@ -761,6 +761,7 @@ useEffect(() => {
         formats={formats}
         value={content.para}
         onChange={(content) => handleBlogChangepara(index, content)}
+        className='text-black'
       />
       <div className="flex items-center gap-2">
         <label className="font-bold text-lg mb-2 flex-shrink-0"> Image:</label>

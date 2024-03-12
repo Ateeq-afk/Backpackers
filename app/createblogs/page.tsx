@@ -542,7 +542,7 @@ useEffect(() => {
       
   return (
     <div className='flex'>
-     <Sidebar />
+     
      <main className="flex-1">
       <div className="container mx-auto p-10 bg-white">
    <h1 className='text-5xl text-center mb-5 font-bold text-yellow-500'>Create Blogs / Shopping/ Culture/ Food</h1>
@@ -730,14 +730,14 @@ useEffect(() => {
       {actData.blog.map((blog, index) => (
   <div key={index} className="border border-gray-300 shadow-md p-4 rounded my-4 w-full">
     <div className="flex flex-col gap-4">
-      <label className="font-bold text-lg mb-2">Blog Title {index + 1}</label>
+      <label className="font-bold text-lg mb-2 text-gray-700">Blog Title {index + 1}</label>
       <input
         type="text"
         placeholder="Day Title: 'Day 0', 'Day 1', 'Day 2', and so on"
         name="title"
         value={blog.title}
         onChange={(e) => handleBlogChange(index, e)}
-        className="w-full p-3 border border-gray-300 rounded"
+        className="w-full p-3 border border-gray-300 rounded text-gray-700"
       />
         <ReactQuill
         theme="snow"
@@ -745,22 +745,23 @@ useEffect(() => {
         formats={formats}
         value={blog.para}
         onChange={(content) => handleBlogChangepara(index, content)}
+        className="w-full p-3 border border-gray-300 rounded text-gray-700"
       />
       <div className="flex items-center gap-2">
-        <label className="font-bold text-lg mb-2 flex-shrink-0"> Image:</label>
+        <label className="font-bold text-lg mb-2 flex-shrink-0 text-gray-700"> Image:</label>
         <input
           type="file"
           onChange={(e) => handleBlogFileChange(index, e)}
-          className="w-full p-3 border border-gray-300 rounded"
+          className="w-full p-3 border border-gray-300 rounded text-gray-700"
         />
-              <label className="font-bold text-lg mb-2 flex-shrink-0 "> Image Alt:</label>
+              <label className="font-bold text-lg mb-2 flex-shrink-0 text-gray-700 "> Image Alt:</label>
       <input
         type="text"
         placeholder="Image Alt Text"
         name="imagealt"
         value={blog.imagealt}
         onChange={(e) => handleBlogChange(index, e)}
-        className="w-full p-3 border border-gray-300 rounded"
+        className="w-full p-3 border border-gray-300 rounded text-gray-700"
       />
       </div>
       {/* Image Alt Text */}
@@ -785,7 +786,7 @@ useEffect(() => {
             value={selectedBlog}
             onChange={(activityOptions) => handleTourproductsChange(activityOptions, index)}
             options={tourOptions}
-            className="flex-grow"
+            className="flex-grow text-gray-700"
             placeholder={`Select Tourproducts Activity #${index + 1}`}
             isClearable
           />

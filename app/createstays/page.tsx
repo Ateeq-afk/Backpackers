@@ -403,13 +403,13 @@ useEffect(() => {
       
   return (
     <div className='flex'>
-     <Sidebar />
+     
      <main className="flex-1">
       <div className="container mx-auto p-10 bg-white">
       <h1 className='text-5xl text-center mb-5 font-bold text-yellow-500'>Create Stays / Camping</h1>
   <form onSubmit={handleSubmit} className="space-y-4">
   <div className='border border-gray-700 px-8 py-4 rounded-xl '> 
-  <div className='text-4xl font-semibold text-center mb-5'>Hero section</div>
+  <div className='text-4xl font-semibold text-gray-700 text-center mb-5'>Hero section</div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
       <label htmlFor="name" className="block text-sm font-medium text-gray-700">Activity Name:</label>
@@ -606,10 +606,12 @@ useEffect(() => {
   id="destination"
   name="destination"
   placeholder="Select Destination"
+  className= "text-gray-700"
   value={destOptions.find((option: any) => option.value === actData.destination)}
   onChange={(selectedOption) => setActData(prevState => ({ ...prevState, destination: selectedOption ? (selectedOption as any).value : ''}))}
   options={destOptions}
-/>
+  ></Select>
+
 
       </div>
  </div>
@@ -675,52 +677,52 @@ useEffect(() => {
       {actData.booking.map((booking, index) => (
   <div key={index} className="border border-gray-300 shadow-md p-4 rounded my-4 w-full">
     <div className="flex flex-col gap-4 ">
-      <label className="font-bold text-lg mb-2">Booking Options {index + 1}</label>
+      <label className="font-bold text-gray-700 text-lg mb-2">Booking Options {index + 1}</label>
       <div className='flex flex-row gap-2 '>
         <div className='flex flex-row gap-2 w-1/2 items-center'>
-      <label className="font-bold text-sm  ">Booking Name</label>
+      <label className="font-bold text-gray-700 text-sm  ">Booking Name</label>
       <input
         type="text"
         placeholder="Enter name of the activity"
         name="bookingname"
         value={booking.bookingname}
         onChange={(e) => handlebookingChange(index, e)}
-        className=" p-3 border-b border-gray-300 rounded w-full"
+        className=" p-3 border-b border-gray-300 text-gray-700 rounded w-full"
       />
       </div>
       <div className='flex flex-row w-1/2 items-center gap-2'>
-          <label className="font-bold text-sm">Duration</label>
+          <label className="font-bold text-gray-700 text-sm">Duration</label>
       <input
         type="text"
         placeholder="Enter Duration like 2 hour or 2 day"
         name="duration"
         value={booking.duration}
         onChange={(e) => handlebookingChange(index, e)}
-        className="w-full p-3 border-b border-gray-300 rounded"
+        className="w-full p-3 border-b border-gray-300 rounded text-gray-700"
       />
       </div>
         </div>
         <div className="flex flex-row gap-2">
             <div className='w-1/2 flex flex-row gap-4 items-center'>
-        <label className="font-bold text-sm mb-2 flex-shrink-0">From Amount</label>
+        <label className="font-bold text-sm mb-2 text-gray-700 flex-shrink-0">From Amount</label>
       <input
         type="number"
         placeholder="Enter the slash amount"
         name="fromamount"
         value={booking.fromamount}
         onChange={(e) => handlebookingChange(index, e)}
-        className="w-full p-3 border border-gray-300 rounded"
+        className="w-full p-3 border border-gray-300 rounded text-gray-700"
       />
    </div>
    <div className='w-1/2 flex flex-row gap-2 items-center'>
-        <label className="font-bold text-sm mb-2 flex-shrink-0"> Amount</label>
+        <label className="font-bold text-gray-700 text-sm mb-2 flex-shrink-0"> Amount</label>
         <input
           type="number"
           placeholder="Enter main amount of Booking options"
           name="amount"
           value={booking.amount}
           onChange={(e) => handlebookingChange(index, e)}
-          className="w-full p-3 border border-gray-300 rounded"
+          className="w-full p-3 border border-gray-300 rounded text-gray-700"
         />
         </div>
            </div>
@@ -736,7 +738,7 @@ useEffect(() => {
 >
   Add New Booking
 </button>
-<div className='text-xl text-center mt-5'>Add unique points for full booking section</div>
+<div className='text-xl text-gray-700 text-center mt-5'>Add unique points for full booking section</div>
 {actData.desc.map((item, index) => (
         <div key={index} className="flex flex-col md:flex-row justify-between gap-2 items-center mb-2 mt-5">
           <input type='text' value={item} placeholder={`Description Point ${index + 1}`} onChange={(e) => handleChangeArray('desc', index, e.target.value)} className="p-2 border-b border-gray-300 rounded w-full text-gray-700 focus:outline-none" />
@@ -800,14 +802,14 @@ useEffect(() => {
 {actData.faq.map((faq, index) => (
   <div key={index} className="border p-4 rounded flex justify-between items-center">
     <div className="flex-1 mr-2">
-      <label className="font-bold">Faq {index + 1}</label>
+      <label className="font-bold text-gray-700">Faq {index + 1}</label>
       <input
        type="text"
         name="question"
-        placeholder="Enter the questionm"
+        placeholder="Enter the question"
         value={faq.question}
         onChange={(e) => handleFaqChange(index, e)}
-        className="p-2 border border-gray-300 rounded w-full"
+        className="p-2 border border-gray-300 text-gray-700 rounded w-full"
       />
     </div>
     <div className="w-[450px] pt-6">
@@ -817,7 +819,7 @@ useEffect(() => {
         name="answer"
         value={faq.answer}
         onChange={(e) => handleFaqChange(index, e)}
-        className="p-2 border border-gray-300 rounded w-full"
+        className="p-2 border border-gray-300 text-gray-700 rounded w-full"
       />
     </div>
     <button
@@ -847,7 +849,7 @@ useEffect(() => {
             value={selectedBlog}
             onChange={(activityOptions) => handleSimilarChange(activityOptions, index)}
             options={activityOptions}
-            className="flex-grow"
+            className="flex-grow text-gray-700"
             placeholder={`Select Similar Activity #${index + 1}`}
             isClearable
           />
@@ -878,7 +880,7 @@ useEffect(() => {
         value={selectedActivity}
         onChange={(activityOptions) => handleRelatedChange(activityOptions, index)}
         options={activityOptions}
-        className="flex-grow"
+        className="flex-grow text-gray-700"
         placeholder={`Select Related Activity #${index + 1}`}
         isClearable
       />
@@ -910,7 +912,7 @@ useEffect(() => {
             value={selectedBlog}
             onChange={(option) => handleSelectChange(option, index)}
             options={options}
-            className="flex-grow"
+            className="flex-grow text-gray-700"
             placeholder={`Select Blog #${index + 1}`}
             isClearable
           />
