@@ -4,6 +4,7 @@ import React, { ChangeEvent,useState,useEffect } from 'react';
 import Select from 'react-select';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
+import { uploadFileToS3 } from "../aws"
 
 const ReactQuill = dynamic(() => import('react-quill'), {
   ssr: false,
@@ -16,7 +17,7 @@ interface BlogMain {
     title: string;
     para: string;
     imagealt: string;
-    image: File | null;
+    image: File | string; 
   }
   interface ActData {
     name: string;
@@ -102,7 +103,7 @@ const page = () => {
         activityproduct:[],
         blogproduct:[],
         blog: [
-            { title: '', para: '', imagealt: '', image:null }
+            { title: '', para: '', imagealt: '', image:'' }
           ],
           bloga:[],
           photoname: '', // Initialize Person's Name
@@ -335,10 +336,22 @@ useEffect(() => {
         const { name, value } = e.target;
         setActData(prevState => ({ ...prevState, [name]: value }));
       };
-      const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    //   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    //     const { name, files } = e.target;
+    //     if (files && files.length > 0) {
+    //       setActData(prevState => ({ ...prevState, [name]: files[0] }));
+    //     }
+    //   };
+    const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const { name, files } = e.target;
         if (files && files.length > 0) {
-          setActData(prevState => ({ ...prevState, [name]: files[0] }));
+          const uploadResult = await uploadFileToS3(files[0]);
+          if (uploadResult) {
+            setActData(prevState => ({
+              ...prevState,
+              [name]: uploadResult.name, // Storing the filename in S3 format in 'coverimage'
+            }));
+          }
         }
       };
       const handleChangeArray = (name: keyof ActData, index: number, value: string) => {
@@ -419,14 +432,35 @@ useEffect(() => {
         });
       };
       
-      const handleBlogFileChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
-        // Ensure that there's at least one file selected
+    //   const handleBlogFileChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
+    //     // Ensure that there's at least one file selected
+    //     if (e.target.files && e.target.files[0]) {
+    //       const updatedDays = [...actData.blog];
+    //       updatedDays[index] = { ...updatedDays[index], image: e.target.files[0] };
+    //       setActData({ ...actData, blog: updatedDays });
+    //     }
+    //   };
+    const handleBlogFileChange = async (index: number, e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-          const updatedDays = [...actData.blog];
-          updatedDays[index] = { ...updatedDays[index], image: e.target.files[0] };
-          setActData({ ...actData, blog: updatedDays });
+          const file = e.target.files[0];
+          
+          // Perform the upload
+          const uploadResult = await uploadFileToS3(file);
+          if (uploadResult) {
+            // Update state with the S3 file name
+            const updatedBlogs = [...actData.blog];
+            updatedBlogs[index] = { 
+              ...updatedBlogs[index], 
+              image: uploadResult.name, // Store the S3 file name in the 'image' field
+            };
+            setActData({ ...actData, blog: updatedBlogs });
+          } else {
+            // Handle the failure (e.g., display an error message)
+            console.error("Failed to upload file.");
+          }
         }
       };
+      
       const handleBlogChangepara = (index: number, content: string) => {
         setActData(prev => {
           const updatedBlogs = [...prev.blog];
@@ -444,7 +478,7 @@ useEffect(() => {
     
         // Append non-array fields to formData
         for (const [key, value] of Object.entries(actData)) {
-            if (!['days', 'over','products','tourproducts','bloga','blog','blogproduct','activityproduct'].includes(key)) {
+            if (![ 'over','products','tourproducts','bloga','blog','blogproduct','activityproduct'].includes(key)) {
               formData.append(key, value);
             }
           }
@@ -453,10 +487,11 @@ useEffect(() => {
         //   }
         actData.blog.forEach((blog, index) => {
             for (const [key, value] of Object.entries(blog)) {
-                if (blog.image && blog.image instanceof File) {
-                    formData.append(`blogImage[${index}]`, blog.image, blog.image.name);
+            //     if (blog.image && blog.image instanceof File) {
+            //         formData.append(`blogImage[${index}]`, blog.image, blog.image.name);
                   
-              } else if (typeof value === 'string' || typeof value === 'number') {
+            //   } else 
+            if (typeof value === 'string' || typeof value === 'number') {
                 // All other values that are strings or numbers can be sent as text fields.
                 formData.append(`blog[${index}].${key}`, value.toString());
               }
@@ -536,13 +571,13 @@ useEffect(() => {
       const addNewBlog = () => {
         setActData({
           ...actData,
-         blog: [...actData.blog, { title: '', para: '', imagealt: '', image:null }],
+         blog: [...actData.blog, { title: '', para: '', imagealt: '', image:'' }],
         });
       };
       
   return (
     <div className='flex'>
-     
+     <Sidebar />
      <main className="flex-1">
       <div className="container mx-auto p-10 bg-white">
    <h1 className='text-5xl text-center mb-5 font-bold text-yellow-500'>Create Blogs / Shopping/ Culture/ Food</h1>

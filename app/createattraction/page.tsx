@@ -465,7 +465,6 @@ useEffect(() => {
             for (const [key, value] of Object.entries(content)) {
                 if (content.image && content.image instanceof File) {
                     formData.append(`contentImage[${index}]`, content.image, content.image.name);
-                  
               } else if (typeof value === 'string' || typeof value === 'number') {
                 // All other values that are strings or numbers can be sent as text fields.
                 formData.append(`content[${index}].${key}`, value.toString());

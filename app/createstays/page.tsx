@@ -403,7 +403,7 @@ useEffect(() => {
       
   return (
     <div className='flex'>
-     
+         <Sidebar />
      <main className="flex-1">
       <div className="container mx-auto p-10 bg-white">
       <h1 className='text-5xl text-center mb-5 font-bold text-yellow-500'>Create Stays / Camping</h1>
