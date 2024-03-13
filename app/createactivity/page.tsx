@@ -970,14 +970,14 @@ useEffect(() => {
 {actData.faq.map((faq, index) => (
   <div key={index} className="border p-4 rounded flex justify-between items-center">
     <div className="flex-1 mr-2">
-      <label className="font-bold">Faq {index + 1}</label>
+      <label className="font-bold text-black">Faq {index + 1}</label>
       <input
        type="text"
         name="question"
-        placeholder="Enter the questionm"
+        placeholder="Enter the question"
         value={faq.question}
         onChange={(e) => handleFaqChange(index, e)}
-        className="p-2 border border-gray-300 rounded w-full"
+        className="p-2 border border-gray-300 rounded w-full text-black"
       />
     </div>
     <div className="w-[450px] pt-6">
@@ -987,7 +987,7 @@ useEffect(() => {
         name="answer"
         value={faq.answer}
         onChange={(e) => handleFaqChange(index, e)}
-        className="p-2 border border-gray-300 rounded w-full"
+        className="p-2 border border-gray-300 rounded w-full text-black"
       />
     </div>
     <button

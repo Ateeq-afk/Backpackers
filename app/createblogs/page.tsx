@@ -37,6 +37,7 @@ interface BlogMain {
     bloga: (BlogOption | null)[];
     blogproduct: (Blogproduct | null)[];
     activityproduct:  (Activity | null)[];
+    attractionproduct:  (Activity | null)[];
     blog: BlogMain[];
     photoname: string; // Person's Name
     time: string; // Time Ago
@@ -84,6 +85,10 @@ interface BlogMain {
     _id: string;
     name: string;
   }
+  interface Attraction{
+    _id: string;
+    name: string;
+  }
 const page = () => {
     const [actData, setActData] = useState<ActData>({
         name: '',
@@ -101,6 +106,7 @@ const page = () => {
         tourproducts: [],
         products: [],
         activityproduct:[],
+        attractionproduct:[],
         blogproduct:[],
         blog: [
             { title: '', para: '', imagealt: '', image:'' }
@@ -111,6 +117,7 @@ const page = () => {
           photo: '',
       });
       const [activityOptions, setActivityOptions] = useState([]);
+      const [attractionoptions, setAttractionoptions] = useState([]);
       const [blogOptions, setBlogOptions] = useState([]);
       const [options,setOptions]= useState([])
       const [tourOptions, settourOptions] = useState([]);
@@ -209,6 +216,39 @@ useEffect(() => {
     
     fetchDest();
   }, []);
+  useEffect(() => {
+    const fetchActractions = async () => {
+      const response = await fetch('https://launch-api1.vercel.app/attraction');
+      const data = await response.json();
+      const formattedOptions = data.data.map((activity: Attraction) => ({
+        value: activity._id,
+        label: activity.name
+      }));
+      setAttractionoptions(formattedOptions);
+    };
+    
+    fetchActractions();
+  }, []);
+  const handleSelectAttractionChange = (selectedOption: Activity | null, index: number) => {
+    if (selectedOption) {
+        setActData(prevState => ({
+            ...prevState,
+            attractionproduct: prevState.attractionproduct.map((item, i) => (
+                i === index ? selectedOption : item
+            ))
+        }));
+    }
+};      const handleAddAttractionselect = () => {
+    setActData(prevState => ({
+      ...prevState,
+      attractionproduct: [...prevState.attractionproduct, null] // It's now valid to add null because of the updated type
+    }));
+  };      const handleRemoveAttractionSelect = (index: number) => {
+    setActData(prevState => ({
+      ...prevState,
+      attractionproduct: prevState.attractionproduct.filter((_, i) => i !== index)
+    }));
+  };
   const handleTypeChange = (selectedOption: BlogOption | null) => {
     if (selectedOption) {
       setActData(prevState => ({
@@ -969,6 +1009,39 @@ useEffect(() => {
        <button
          type="button"
          onClick={handleAddBlogselect}
+         className="px-4 py-2 bg-yellow-500 text-white rounded"
+       >
+         Add {actData.type}
+       </button>
+     </div>
+   </div>
+     ) : null}
+        {actData.type === 'Attraction' || actData.type === 'Religious'  ?  (
+   <div className='w-full px-8 pt-6 pb-8 border border-gray-700 rounded-xl'>
+     <h3 className="text-4xl text-center font-semibold text-gray-700 mb-4">Related {actData.type}</h3>
+     {actData.attractionproduct.map((selectedBlog, index) => (
+       <div key={index} className="flex flex-row items-center mb-2">
+         <Select
+           value={selectedBlog}
+           onChange={(option) => handleSelectAttractionChange(option, index)}
+           options={attractionoptions}
+           className="flex-grow text-black"
+           placeholder={`Select #${index + 1}`}
+           isClearable
+         />
+         <button
+           type="button"
+           onClick={() => handleRemoveAttractionSelect(index)}
+           className="bg-red-500 text-white px-2 py-1 rounded ml-2"
+         >
+           Remove
+         </button>
+       </div>
+     ))}
+     <div className="flex justify-center mt-2">
+       <button
+         type="button"
+         onClick={handleAddAttractionselect}
          className="px-4 py-2 bg-yellow-500 text-white rounded"
        >
          Add {actData.type}

@@ -417,12 +417,32 @@ useEffect(() => {
         });
       };
       
-      const handleBlogFileChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
-        // Ensure that there's at least one file selected
+    //   const handleBlogFileChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
+    //     // Ensure that there's at least one file selected
+    //     if (e.target.files && e.target.files[0]) {
+    //       const updatedDays = [...AttData.content];
+    //       updatedDays[index] = { ...updatedDays[index], image: e.target.files[0] };
+    //       setAttData({ ...AttData, content: updatedDays });
+    //     }
+    //   };
+    const handleBlogFileChange = async (index: number, e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-          const updatedDays = [...AttData.content];
-          updatedDays[index] = { ...updatedDays[index], image: e.target.files[0] };
-          setAttData({ ...AttData, content: updatedDays });
+          const file = e.target.files[0];
+          
+          // Perform the upload
+          const uploadResult = await uploadFileToS3(file);
+          if (uploadResult) {
+            // Update state with the S3 file name
+            const updatedDays = [...AttData.content];
+            updatedDays[index] = { 
+              ...updatedDays[index], 
+              image: uploadResult.name, // Store the S3 file name in the 'image' field
+            };
+            setAttData({ ...AttData, content: updatedDays });
+          } else {
+            // Handle the failure (e.g., display an error message)
+            console.error("Failed to upload file.");
+          }
         }
       };
       const handleBlogChangepara = (index: number, content: string) => {
@@ -518,7 +538,7 @@ useEffect(() => {
         });
       }
         try {
-          const response = await fetch('https://launch-api1.vercel.app/attraction/createattraction', {
+          const response = await fetch('http://localhost:4000/attraction/createattraction', {
             method: 'POST',
             body: formData,
           });
@@ -750,14 +770,14 @@ useEffect(() => {
       {AttData.content.map((content, index) => (
   <div key={index} className="border border-gray-300 shadow-md p-4 rounded my-4 w-full">
     <div className="flex flex-col gap-4">
-      <label className="font-bold text-lg mb-2">Content Title {index + 1}</label>
+      <label className="font-bold text-lg mb-2 text-black">Content Title {index + 1}</label>
       <input
         type="text"
         placeholder="Name of the content"
         name="title"
         value={content.title}
         onChange={(e) => handleBlogChange(index, e)}
-        className="w-full p-3 border border-gray-300 rounded"
+        className="w-full p-3 border border-gray-300 rounded text-black"
       />
         <ReactQuill
         theme="snow"
@@ -768,20 +788,20 @@ useEffect(() => {
         className='text-black'
       />
       <div className="flex items-center gap-2">
-        <label className="font-bold text-lg mb-2 flex-shrink-0"> Image:</label>
+        <label className="font-bold text-lg mb-2 flex-shrink-0 text-black"> Image:</label>
         <input
           type="file"
           onChange={(e) => handleBlogFileChange(index, e)}
-          className="w-full p-3 border border-gray-300 rounded"
+          className="w-full p-3 border border-gray-300 rounded text-black"
         />
-              <label className="font-bold text-lg mb-2 flex-shrink-0 "> Image Alt:</label>
+              <label className="font-bold text-lg mb-2 flex-shrink-0 text-black "> Image Alt:</label>
       <input
         type="text"
         placeholder="Image Alt Text"
         name="imagealt"
         value={content.imagealt}
         onChange={(e) => handleBlogChange(index, e)}
-        className="w-full p-3 border border-gray-300 rounded"
+        className="w-full p-3 border border-gray-300 rounded text-black"
       />
       </div>
       {/* Image Alt Text */}
@@ -862,18 +882,18 @@ useEffect(() => {
   </div>
 </div>
 <div className='w-full px-8 pt-6 pb-8 border border-gray-700 rounded-xl'>
-      <h3 className="text-4xl text-center font-semibold text-gray-700 mb-4">FAQ Section </h3>
+      <h3 className="text-4xl text-center font-semibold text-gray-700 mb-4 ">FAQ Section </h3>
 {AttData.faq.map((faq, index) => (
   <div key={index} className="border p-4 rounded flex justify-between items-center">
     <div className="flex-1 mr-2">
-      <label className="font-bold">Faq {index + 1}</label>
+      <label className="font-bold text-black">Faq {index + 1}</label>
       <input
        type="text"
         name="question"
-        placeholder="Enter the questionm"
+        placeholder="Enter the question"
         value={faq.question}
         onChange={(e) => handleFaqChange(index, e)}
-        className="p-2 border border-gray-300 rounded w-full"
+        className="p-2 border border-gray-300 rounded w-full text-black"
       />
     </div>
     <div className="w-[450px] pt-6">
@@ -883,7 +903,7 @@ useEffect(() => {
         name="answer"
         value={faq.answer}
         onChange={(e) => handleFaqChange(index, e)}
-        className="p-2 border border-gray-300 rounded w-full"
+        className="p-2 border border-gray-300 rounded w-full text-black"
       />
     </div>
     <button
@@ -913,7 +933,7 @@ useEffect(() => {
             value={selectedBlog}
             onChange={(activityOptions) => handleActivityChange(activityOptions, index)}
             options={activityOptions}
-            className="flex-grow"
+            className="flex-grow text-black"
             placeholder={`Select Similar Activity #${index + 1}`}
             isClearable
           />
