@@ -538,7 +538,7 @@ useEffect(() => {
         });
       }
         try {
-          const response = await fetch('http://localhost:4000/attraction/createattraction', {
+          const response = await fetch('https://launch-api1.vercel.app/attraction/createattraction', {
             method: 'POST',
             body: formData,
           });
