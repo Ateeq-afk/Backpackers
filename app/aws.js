@@ -11,17 +11,17 @@ AWS.config.update({
 const s3 = new AWS.S3();
 
 const uploadFileToS3 = async (file) => {
-  const fileName = `uploads/${Date.now()}_${file.name}`;
+    const timestampedFileName = `${Date.now()}_${file.name}`; // Name to be saved in S3
+    const s3Key = `uploads/${timestampedFileName}`; 
   const uploadParams = {
     Bucket: 'bpu-images-v1',
-    Key: fileName,
+    Key: s3Key,
     Body: file,
-    ACL: 'public-read',
   };
 
   try {
     const data = await s3.upload(uploadParams).promise();
-    return { url: data.Location, name: fileName };
+    return { url: data.Location, name: timestampedFileName };
   } catch (err) {
     console.error("Upload failed:", err.message);
   console.log("Error code:", err.code);

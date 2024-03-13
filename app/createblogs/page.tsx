@@ -21,7 +21,7 @@ interface BlogMain {
   }
   interface ActData {
     name: string;
-    coverimage: File | null;
+    coverimage: File | string; 
     coverimagealt: string;
     type: string;
     date: string;
@@ -40,7 +40,7 @@ interface BlogMain {
     blog: BlogMain[];
     photoname: string; // Person's Name
     time: string; // Time Ago
-    photo: File | null;
+    photo: File | string; 
   }
   interface BlogOption {
     value: string;
@@ -87,7 +87,7 @@ interface BlogMain {
 const page = () => {
     const [actData, setActData] = useState<ActData>({
         name: '',
-        coverimage: null,
+        coverimage: '',
         coverimagealt: '',
         type: '',
         date:'',
@@ -108,7 +108,7 @@ const page = () => {
           bloga:[],
           photoname: '', // Initialize Person's Name
           time: '', // Initialize Time Ago
-          photo: null,
+          photo: '',
       });
       const [activityOptions, setActivityOptions] = useState([]);
       const [blogOptions, setBlogOptions] = useState([]);
@@ -732,7 +732,7 @@ useEffect(() => {
                   type="file"
                   id="photo"
                   name="photo"
-                  onChange={(e) => setActData({ ...actData, photo: e.target.files ? e.target.files[0] : null })}
+                  onChange={handleFileChange}
                   className="block w-full py-2 px-1 border-b border-gray-300 text-gray-700 focus:outline-none"
                 />
               </div>
