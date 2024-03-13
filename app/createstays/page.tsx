@@ -2,6 +2,7 @@
 import Sidebar from '@/Components/Sidebar/Sidebar'
 import React, { ChangeEvent,useState,useEffect } from 'react';
 import Select from 'react-select';
+import { uploadFileToS3 } from "../aws"
 
   interface Booking {
     bookingname: string;
@@ -15,17 +16,17 @@ import Select from 'react-select';
   }
   interface ActData {
     name: string;
-    coverimage: File | null;
+    coverimage: File | string;
     coverimagealt: string;
-    coverimage2: File | null;
+    coverimage2: File | string;
     coverimagealt2: string;
-    coverimage3: File | null;
+    coverimage3: File | string;
     coverimagealt3: string;
-    coverimage4: File | null;
+    coverimage4: File | string;
     coverimagealt4: string;
-    coverimage5: File | null;
+    coverimage5: File | string;
     coverimagealt5: string;
-    coverimage6: File | null;
+    coverimage6: File | string;
     coverimagealt6: string;
     type: string;
     urllink: string;
@@ -64,17 +65,17 @@ import Select from 'react-select';
 const page = () => {
     const [actData, setActData] = useState<ActData>({
         name: '',
-        coverimage: null,
+        coverimage: '',
         coverimagealt: '',
-        coverimage2: null,
+        coverimage2: '',
         coverimagealt2: '',
-        coverimage3: null,
+        coverimage3: '',
         coverimagealt3: '',
-        coverimage4: null,
+        coverimage4: '',
         coverimagealt4: '',
-        coverimage5: null,
+        coverimage5: '',
         coverimagealt5: '',
-        coverimage6: null,
+        coverimage6: '',
         coverimagealt6: '',
         type: 'stays',
         urllink: '',
@@ -221,10 +222,16 @@ useEffect(() => {
         const { name, value } = e.target;
         setActData(prevState => ({ ...prevState, [name]: value }));
       };
-      const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const { name, files } = e.target;
         if (files && files.length > 0) {
-          setActData(prevState => ({ ...prevState, [name]: files[0] }));
+          const uploadResult = await uploadFileToS3(files[0]);
+          if (uploadResult) {
+            setActData(prevState => ({
+              ...prevState,
+              [name]: uploadResult.name, // Storing the filename in S3 format in 'coverimage'
+            }));
+          }
         }
       };
       const handleChangeArray = (name: keyof ActData, index: number, value: string) => {

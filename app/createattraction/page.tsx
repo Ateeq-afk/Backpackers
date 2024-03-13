@@ -4,6 +4,7 @@ import Select from 'react-select';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import Sidebar from '@/Components/Sidebar/Sidebar';
+import { uploadFileToS3 } from "../aws"
 
 const ReactQuill = dynamic(() => import('react-quill'), {
   ssr: false,
@@ -14,7 +15,7 @@ interface BlogMain {
     title: string;
     para: string;
     imagealt: string;
-    image: File | null;
+    image: File | string;
   }
     interface FAQ {
     question: string;
@@ -22,7 +23,7 @@ interface BlogMain {
   }
   interface AttData {
     name: string;
-    coverimage: File | null;
+    coverimage: File | string;
     coverimagealt: string;
     type: string;
     urllink: string;
@@ -83,7 +84,7 @@ interface BlogMain {
 const page = () => {
     const [AttData, setAttData] = useState<AttData>({
         name: '',
-        coverimage: null,
+        coverimage: '',
         coverimagealt: '',
         type: '',
         urllink: '',
@@ -96,7 +97,7 @@ const page = () => {
         mustattraction: [],
         activity: [],
         content: [
-            { title: '', para: '', imagealt: '', image:null }
+            { title: '', para: '', imagealt: '', image:'' }
           ],
           faq:[
             {question:'', answer:''}
@@ -361,10 +362,16 @@ useEffect(() => {
         const { name, value } = e.target;
         setAttData(prevState => ({ ...prevState, [name]: value }));
       };
-      const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const { name, files } = e.target;
         if (files && files.length > 0) {
-          setAttData(prevState => ({ ...prevState, [name]: files[0] }));
+          const uploadResult = await uploadFileToS3(files[0]);
+          if (uploadResult) {
+            setAttData(prevState => ({
+              ...prevState,
+              [name]: uploadResult.name, // Storing the filename in S3 format in 'coverimage'
+            }));
+          }
         }
       };
       const handleChangeArray = (name: keyof AttData, index: number, value: string) => {
@@ -428,7 +435,7 @@ useEffect(() => {
     const addNewBlog = () => {
         setAttData({
           ...AttData,
-          content: [...AttData.content, { title: '', para: '', imagealt: '', image:null }],
+          content: [...AttData.content, { title: '', para: '', imagealt: '', image:'' }],
         });
       };
       
@@ -463,9 +470,7 @@ useEffect(() => {
           formData.append('faq', JSON.stringify(AttData.faq));
           AttData.content.forEach((content, index) => {
             for (const [key, value] of Object.entries(content)) {
-                if (content.image && content.image instanceof File) {
-                    formData.append(`contentImage[${index}]`, content.image, content.image.name);
-              } else if (typeof value === 'string' || typeof value === 'number') {
+           if (typeof value === 'string' || typeof value === 'number') {
                 // All other values that are strings or numbers can be sent as text fields.
                 formData.append(`content[${index}].${key}`, value.toString());
               }

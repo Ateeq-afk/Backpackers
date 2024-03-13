@@ -2,6 +2,7 @@
 import Sidebar from '@/Components/Sidebar/Sidebar'
 import React, { ChangeEvent,useState,useEffect } from 'react';
 import Select from 'react-select';
+import { uploadFileToS3 } from "../aws"
 
 interface Day {
     day: string;
@@ -9,7 +10,7 @@ interface Day {
     description: string[];
     meals: string;
     imagealt: string;
-    image: File | null;
+    image: File | string;
   }
   
   interface Booking {
@@ -24,17 +25,17 @@ interface Day {
   }
   interface ActData {
     name: string;
-    coverimage: File | null;
+    coverimage: File | string;
     coverimagealt: string;
-    coverimage2: File | null;
+    coverimage2: File | string;
     coverimagealt2: string;
-    coverimage3: File | null;
+    coverimage3: File | string;
     coverimagealt3: string;
-    coverimage4: File | null;
+    coverimage4: File | string;
     coverimagealt4: string;
-    coverimage5: File | null;
+    coverimage5: File | string;
     coverimagealt5: string;
-    coverimage6: File | null;
+    coverimage6: File | string;
     coverimagealt6: string;
     type: string;
     urllink: string;
@@ -78,17 +79,17 @@ interface Day {
 const page = () => {
     const [actData, setActData] = useState<ActData>({
         name: '',
-        coverimage: null,
+        coverimage: '',
         coverimagealt: '',
-        coverimage2: null,
+        coverimage2: '',
         coverimagealt2: '',
-        coverimage3: null,
+        coverimage3: '',
         coverimagealt3: '',
-        coverimage4: null,
+        coverimage4: '',
         coverimagealt4: '',
-        coverimage5: null,
+        coverimage5: '',
         coverimagealt5: '',
-        coverimage6: null,
+        coverimage6: '',
         coverimagealt6: '',
         type: 'activity',
         urllink: '',
@@ -105,7 +106,7 @@ const page = () => {
         confirmation:[],
         cancellation:[],
         days: [
-            { day: '', cityName: '', description: [''], meals: '', imagealt: '', image:null }
+            { day: '', cityName: '', description: [''], meals: '', imagealt: '', image:'' }
           ],
           booking:[
             {bookingname:'', duration:'',fromamount:'',amount:''}
@@ -237,10 +238,22 @@ useEffect(() => {
         const { name, value } = e.target;
         setActData(prevState => ({ ...prevState, [name]: value }));
       };
-      const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+      // const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+      //   const { name, files } = e.target;
+      //   if (files && files.length > 0) {
+      //     setActData(prevState => ({ ...prevState, [name]: files[0] }));
+      //   }
+      // };
+      const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const { name, files } = e.target;
         if (files && files.length > 0) {
-          setActData(prevState => ({ ...prevState, [name]: files[0] }));
+          const uploadResult = await uploadFileToS3(files[0]);
+          if (uploadResult) {
+            setActData(prevState => ({
+              ...prevState,
+              [name]: uploadResult.name, // Storing the filename in S3 format in 'coverimage'
+            }));
+          }
         }
       };
       const handleChangeArray = (name: keyof ActData, index: number, value: string) => {
@@ -312,15 +325,34 @@ useEffect(() => {
       };
       
       // Handle file change for array fields like 'days'
-      const handleDayFileChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
-        // Ensure that there's at least one file selected
+      // const handleDayFileChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
+      //   // Ensure that there's at least one file selected
+      //   if (e.target.files && e.target.files[0]) {
+      //     const updatedDays = [...actData.days];
+      //     updatedDays[index] = { ...updatedDays[index], image: e.target.files[0] };
+      //     setActData({ ...actData, days: updatedDays });
+      //   }
+      // };
+      const handleDayFileChange = async (index: number, e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-          const updatedDays = [...actData.days];
-          updatedDays[index] = { ...updatedDays[index], image: e.target.files[0] };
-          setActData({ ...actData, days: updatedDays });
+          const file = e.target.files[0];
+          
+          // Perform the upload
+          const uploadResult = await uploadFileToS3(file);
+          if (uploadResult) {
+            // Update state with the S3 file name
+            const updatedDays = [...actData.days];
+            updatedDays[index] = { 
+              ...updatedDays[index], 
+              image: uploadResult.name, // Store the S3 file name in the 'image' field
+            };
+            setActData({ ...actData, days: updatedDays });
+          } else {
+            // Handle the failure (e.g., display an error message)
+            console.error("Failed to upload file.");
+          }
         }
       };
-
       const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
       
@@ -339,10 +371,7 @@ useEffect(() => {
         //   }
         actData.days.forEach((day, index) => {
             for (const [key, value] of Object.entries(day)) {
-                if (day.image && day.image instanceof File) {
-                    formData.append(`dayImage[${index}]`, day.image, day.image.name);
-                  
-              } else if (typeof value === 'string' || typeof value === 'number') {
+             if (typeof value === 'string' || typeof value === 'number') {
                 // All other values that are strings or numbers can be sent as text fields.
                 formData.append(`days[${index}].${key}`, value.toString());
               }
@@ -429,7 +458,7 @@ useEffect(() => {
       const addNewDay = () => {
         setActData({
           ...actData,
-          days: [...actData.days, { day: '', cityName: '', description: [], meals: '', imagealt: '' , image:null}],
+          days: [...actData.days, { day: '', cityName: '', description: [], meals: '', imagealt: '' , image:''}],
         });
       };
       const addNewbooking = () => {
