@@ -5,6 +5,7 @@ import { TbTrekking } from "react-icons/tb";
 import { HiHomeModern } from "react-icons/hi2";
 import { MdOutlineAttractions } from "react-icons/md";
 import { ImBlog } from "react-icons/im";
+import { GiMountains } from "react-icons/gi";
 import Image from 'next/image';
 const Sidebar = () => {
   return (
@@ -43,6 +44,12 @@ const Sidebar = () => {
           <div className="flex items-center space-x-3 text-red-400 ">
             <MdOutlineAttractions  className="w-6 h-6" />
             <div>Create Attraction</div>
+          </div>
+        </Link>
+        <Link href="/createdest">
+          <div className="flex items-center space-x-3 text-green-400 ">
+            <GiMountains   className="w-6 h-6" />
+            <div>Create Destination</div>
           </div>
         </Link>
         {/* Add other navigation links similarly */}

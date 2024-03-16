@@ -178,31 +178,31 @@ const page = () => {
     
     fetchActivities();
   }, []);
-useEffect(() => {
-  const fetchtrek = async () => {
-    const response = await fetch('https://launch-api1.vercel.app/trek/trekfull');
-    const data = await response.json();
-    const formattedOptions = data.map((trek:trek) => ({
-      value: trek._id,
-      label: trek.name
-    }));
-    settrekOptions(formattedOptions);
-  }
-    fetchtrek();
-  }, []);
   useEffect(() => {
-    const fetchtour = async () => {
-      const response = await fetch('https://launch-api1.vercel.app/trek/tourfull');
+    const fetchtrek = async () => {
+      const response = await fetch('https://launch-api1.vercel.app/trek/trekfull');
       const data = await response.json();
-      const formattedOptions = data.map((tour: tour) => ({
-        value: tour._id,
-        label: tour.name
+      const formattedOptions = data.map((trek:trek) => ({
+        value: trek._id,
+        label: trek.name
       }));
-      settourOptions(formattedOptions);
-    };
-  
-  fetchtour();
-}, []);
+      settrekOptions(formattedOptions);
+    }
+      fetchtrek();
+    }, []);
+    useEffect(() => {
+      const fetchtour = async () => {
+        const response = await fetch('https://launch-api1.vercel.app/trek/tourfull');
+        const data = await response.json();
+        const formattedOptions = data.map((tour: tour) => ({
+          value: tour._id,
+          label: tour.name
+        }));
+        settourOptions(formattedOptions);
+      };
+    
+    fetchtour();
+  }, []);
 useEffect(() => {
     const fetchDest = async () => {
       const response = await fetch('https://launch-api1.vercel.app/dest');
